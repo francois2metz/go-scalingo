@@ -14,6 +14,7 @@ type TokensService interface {
 
 type APITokenGenerator struct {
 	APIToken      string
+	Scopes        []string
 	TokensService TokensService
 
 	// Internal cache of JWT info
@@ -25,10 +26,22 @@ type apiJWTClaims struct {
 	jwt.StandardClaims
 }
 
-func NewAPITokenGenerator(tokensService TokensService, apiToken string) *APITokenGenerator {
-	return &APITokenGenerator{
+type APITokenGeneratorOpt func(g *APITokenGenerator)
+
+func NewAPITokenGenerator(tokensService TokensService, apiToken string, opts ...APITokenGeneratorOpt) *APITokenGenerator {
+	g := &APITokenGenerator{
 		APIToken:      apiToken,
 		TokensService: tokensService,
+	}
+	for _, opt := range opts {
+		opt(g)
+	}
+	return g
+}
+
+func APITokenGeneratorWithScopes(scopes []string) APITokenGeneratorOpt {
+	return func(g *APITokenGenerator) {
+		g.Scopes = scopes
 	}
 }
 

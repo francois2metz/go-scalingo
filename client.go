@@ -62,6 +62,7 @@ type ClientConfig struct {
 	APIToken            string
 	Region              string
 	UserAgent           string
+	UserScopes          []string
 
 	// StaticTokenGenerator is present for retrocompatibility with legacy tokens
 	// DEPRECATED, Use standard APIToken field for normal operations
@@ -114,6 +115,10 @@ func (c *Client) ScalingoAPI() http.Client {
 		tokenGenerator = c.config.StaticTokenGenerator
 	}
 	if len(c.config.APIToken) != 0 {
+		opts := []http.APITokenGeneratorOpt{}
+		if c.config.UserScopes != nil {
+			opts = append(opts, http.APITokenGeneratorWithScopes(c.config.UserScopes))
+		}
 		tokenGenerator = http.NewAPITokenGenerator(c, c.config.APIToken)
 	}
 	prefix := "/v1"
