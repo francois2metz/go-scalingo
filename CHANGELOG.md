@@ -2,6 +2,8 @@
 
 ## To Be Released
 
+* Fix a typo on the `UpdatedAt` field of the Apps [#220](https://github.com/Scalingo/go-scalingo/pull/220)
+
 ## 4.13.1
 
 * build(deps): bump github.com/golang/mock from 1.5.0 to 1.6.0
